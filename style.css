@@ -539,8 +539,8 @@ spline-viewer {
 }
 
 .barcode-tall:hover {
-    transform: scale(1.15) skewX(-5deg);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+    transform: scale(1.05) ;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
     cursor: help; 
 }
 
@@ -754,7 +754,7 @@ spline-viewer {
     }
 
     .barcode-tall:hover {
-        transform: rotate(90deg) !important;
+        transform: rotate(0deg) !important;
         filter: none;
         cursor: default;
     }
