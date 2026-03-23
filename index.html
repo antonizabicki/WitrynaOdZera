@@ -2,86 +2,612 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WITRYNAODZERA</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-       <link rel="icon" type="image/svg+xml" href="assets/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.ico">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Sequel';
+            src: url('./assets/sequel.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --bg: #000000;
+            --fg: #ffffff;
+            --font: 'Sequel', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: var(--font);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            width: 100vw;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+
+        .blobs-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+            background-color: var(--bg);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            will-change: transform, scale;
+        }
+
+        .blob-1 { width: 45vw; height: 45vw; background: rgba(255, 255, 255, 0.07); top: -10%; left: -10%; }
+        .blob-2 { width: 40vw; height: 40vw; background: rgba(200, 200, 200, 0.04); bottom: -15%; right: -10%; }
+        .blob-3 { width: 35vw; height: 35vw; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); top: 0; left: 0; }
+
+        /* Pojemnik na treść (do efektu Motion Blur) */
+        #main-content {
+            position: relative;
+            z-index: 1;
+            will-change: filter; /* Optymalizacja wydajności podczas bluru */
+        }
+
+        section, footer, .marquee-wrap, nav {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-dot { width: 8px; height: 8px; background-color: white; transition: opacity 0.2s; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid white;
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border 0.2s;
+        }
+
+        @media (pointer: coarse) {
+            * { cursor: auto !important; }
+            .cursor-dot, .cursor-outline, .blobs-container { display: none !important; }
+        }
+
+        h1, h2, h3 { text-transform: uppercase; font-weight: 900; line-height: 0.85; }
+        a { color: var(--fg); text-decoration: none; }
+        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 4vw; }
+        .line-separator { width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.2); margin: 4vw 0; transform-origin: left; }
+
+        nav {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; padding: 2vw 4vw;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+        }
+        .nav-logo { font-size: 1.2vw; font-weight: 900; letter-spacing: 2px; mix-blend-mode: difference; }
+        .nav-links { display: flex; gap: 3vw; mix-blend-mode: difference; }
+        .nav-links a {
+            font-size: 1vw; font-weight: bold; text-transform: uppercase; position: relative; overflow: hidden; padding-bottom: 2px;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
+            background: var(--fg); transform: translateX(-101%); transition: transform 0.3s ease;
+        }
+        .nav-links a:hover::after { transform: translateX(0); }
+
+        section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 10vh 0; }
+
+        .hero-title { font-size: 11vw; white-space: nowrap; display: flex; flex-direction: column; }
+        .hero-title span { display: block; filter: blur(0px); }
+        .hero-title span.outline { color: transparent; -webkit-text-stroke: 2px var(--fg); margin-left: 10vw; }
+        .hero-desc { font-size: 1.5vw; max-width: 40vw; margin-top: 4vw; margin-left: auto; text-align: right; line-height: 1.4; color: #ccc; }
+
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5vw; }
+        .section-title { font-size: 6vw; }
+        .about-text p { font-size: 1.5vw; line-height: 1.5; margin-bottom: 2vw; color: #ccc; }
+        .about-text strong { color: var(--fg); }
+        
+        .services-list { list-style: none; margin-top: 3vw; }
+        .services-list li {
+            font-size: 1.2vw; padding: 1.5vw 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: border-bottom-color 0.3s ease;
+        }
+        .services-list li:hover { border-bottom-color: rgba(255,255,255,0.5); }
+        .services-list .move-wrap {
+            display: flex; align-items: center;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .services-list li:hover .move-wrap { transform: translateX(1.5vw); }
+        .services-list .arrow { margin-right: 1vw; opacity: 0.5; }
+
+        .pricing-wrap {
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2vw; padding: 5vw 2vw;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .pricing-wrap::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle 800px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.07), transparent 40%);
+            opacity: 0; transition: opacity 0.5s ease; pointer-events: none; z-index: -1;
+        }
+        .pricing-wrap:hover::before { opacity: 1; }
+
+        .price-huge { font-size: 10vw; font-weight: 900; margin: 2vw 0; pointer-events: none; }
+        .price-huge span { font-size: 3vw; vertical-align: top; pointer-events: none; }
+        .pricing-details { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vw; margin-bottom: 3vw; max-width: 80%; }
+        .pricing-tag {
+            border: 1px solid rgba(255,255,255,0.3); padding: 0.8vw 1.5vw; border-radius: 50px;
+            font-size: 1vw; text-transform: uppercase; transition: background-color 0.3s, border-color 0.3s;
+        }
+        .pricing-tag:hover { background-color: var(--fg); color: var(--bg); border-color: var(--fg); }
+        .pricing-disclaimer { font-size: 0.9vw; color: #666; max-width: 50vw; text-align: center; pointer-events: none; margin: 0 auto; }
+
+        .portfolio-list { list-style: none; width: 100%; }
+        .portfolio-item { border-bottom: 1px solid rgba(255,255,255,0.2); padding: 3vw 0; position: relative; }
+        .portfolio-item:first-child { border-top: 1px solid rgba(255,255,255,0.2); }
+        .portfolio-link { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .portfolio-name { font-size: 5vw; font-weight: 900; text-transform: lowercase; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .portfolio-desc { font-size: 1vw; max-width: 25vw; text-align: right; opacity: 0.5; transition: opacity 0.3s; }
+        .portfolio-item:hover .portfolio-name { transform: translateX(2vw); }
+        .portfolio-item:hover .portfolio-desc { opacity: 1; }
+        .portfolio-hover-img {
+            position: fixed; top: 0; left: 0; width: 25vw; height: 14vw;
+            object-fit: cover; pointer-events: none; opacity: 0; z-index: 10; border-radius: 4px;
+        }
+
+        .contact-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; justify-content: center; }
+        .contact-email {
+            font-size: clamp(1.5rem, 4vw, 3rem); display: inline-block; margin-top: 5vw;
+            position: relative; color: var(--fg); text-decoration: none; padding-bottom: 0.5vw;
+            transition: color 0.3s ease; white-space: nowrap;
+        }
+        .contact-email::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+            background-color: var(--fg); transform-origin: right; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .contact-email:hover { color: #aaa; }
+        .contact-email:hover::after { transform: scaleX(0); transform-origin: left; }
+
+        footer {
+            padding: 2vw 4vw; display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.2); margin-top: 5vh;
+        }
+        .socials a { font-size: 1vw; margin-right: 2vw; text-transform: uppercase; position: relative; }
+        .socials a::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 1px;
+            background: var(--fg); transform: scaleX(0); transition: transform 0.3s ease; transform-origin: right;
+        }
+        .socials a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        .marquee-wrap {
+            width: 100%; overflow: hidden; border-top: 1px solid var(--fg); border-bottom: 1px solid var(--fg);
+            padding: 1vw 0; background: var(--fg); color: var(--bg); margin-top: 5vw;
+        }
+        .marquee { display: flex; white-space: nowrap; }
+        .marquee span { font-size: 2vw; font-weight: 900; text-transform: uppercase; padding: 0 2vw; }
+
+        @media (max-width: 1024px) {
+            .nav-logo, .nav-links a, .socials a, .pricing-tag, .pricing-disclaimer, .portfolio-desc { font-size: 14px; }
+            .nav-logo { font-size: 18px; }
+            .hero-desc, .about-text p, .services-list li { font-size: 16px; }
+            .hero-title { font-size: 13vw; }
+            .hero-title span.outline { margin-left: 0; }
+            .about-grid { grid-template-columns: 1fr; }
+            .hero-desc { max-width: 100%; text-align: center; margin: 4vw auto 0; }
+            .portfolio-hover-img { display: none !important; }
+            .portfolio-link { flex-direction: column; align-items: center; text-align: center; }
+            .portfolio-desc { text-align: center; max-width: 100%; margin-top: 10px; opacity: 1; }
+            .price-huge { font-size: 15vw; }
+            .marquee span { font-size: 6vw; }
+            .pricing-wrap { padding: 8vw 4vw; border-radius: 4vw; }
+        }
+
+        @media (max-width: 768px) {
+            section { padding: 8vh 0; text-align: center; }
+            .container { padding: 0 5vw; display: flex; flex-direction: column; align-items: center; }
+            
+            nav { flex-direction: column; padding: 6vw 4vw; gap: 4vw; align-items: center; position: relative; }
+            .nav-logo { font-size: 6vw; letter-spacing: 1px; }
+            .nav-links { width: 100%; justify-content: center; gap: 4vw; flex-wrap: wrap; }
+            .nav-links a { font-size: 3.5vw; }
+            
+            .hero-title { font-size: 13vw; align-items: center; }
+            .hero-title span { white-space: nowrap; }
+            .hero-title span.outline { -webkit-text-stroke: 1px var(--fg); }
+            .hero-desc { font-size: 4.5vw; margin-top: 6vw; line-height: 1.5; text-align: center; max-width: 95%; }
+            
+            .section-title { font-size: 8vw; margin-bottom: 6vw; text-align: center; line-height: 1.1; word-wrap: break-word; }
+            .about-grid { display: flex; flex-direction: column; align-items: center; gap: 6vw; }
+            .about-text { text-align: center; }
+            .about-text p { font-size: 4.5vw; margin-bottom: 4vw; }
+            
+            .services-list { display: flex; flex-direction: column; align-items: center; margin-top: 6vw; width: 100%; }
+            .services-list li { font-size: 4vw; padding: 4vw 0; justify-content: center; width: 100%; }
+            .services-list .move-wrap { justify-content: center; }
+            .services-list li:hover .move-wrap { transform: none; }
+            
+            .pricing-wrap { padding: 8vw 5vw; border-radius: 6vw; max-width: 100%; box-sizing: border-box; }
+            .price-huge { font-size: 18vw; margin: 2vw 0; display: flex; justify-content: center; align-items: baseline; }
+            .price-huge span { font-size: 6vw; margin-left: 2vw; }
+            .pricing-details { gap: 3vw; margin-bottom: 8vw; flex-direction: column; align-items: center; width: 100%; }
+            .pricing-tag { font-size: 3.5vw; padding: 3vw 0; width: 80%; text-align: center; max-width: 300px; }
+            .pricing-disclaimer { font-size: 3.5vw; max-width: 90%; }
+            
+            .portfolio-item { padding: 8vw 0; }
+            .portfolio-link { gap: 3vw; align-items: center; text-align: center; }
+            .portfolio-name { font-size: 8vw; }
+            .portfolio-item:hover .portfolio-name { transform: none; }
+            .portfolio-desc { font-size: 4vw; }
+            
+            .marquee span { font-size: 8vw; padding: 0 4vw; }
+            
+            .contact-wrap { align-items: center; justify-content: center; }
+            .contact-email { font-size: clamp(1rem, 4.5vw, 2rem); margin-top: 8vw; padding-bottom: 2vw; white-space: nowrap; }
+            
+            footer { flex-direction: column; gap: 6vw; padding: 8vw 4vw; text-align: center; align-items: center; }
+            .socials { display: flex; justify-content: center; gap: 4vw; width: 100%; }
+            .socials a { font-size: 4vw; margin: 0; }
+            footer div:last-child { font-size: 3.5vw; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="main-grid">
-        <header class="header-row">
-            <img src="assets/logo.svg" alt="WITRYNAODZERA" class="main-logo-img" fetchpriority="high">
-        </header>
+    <div class="blobs-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
 
-        <nav class="nav-row">
-            <a href="onas.html" class="nav-item">O NAS</a>
-            <a href="cennik.html" class="nav-item">CENNIK</a>
-            <a href="portfolio.html" class="nav-item">PORTFOLIO</a>
-            <a href="kontakt.html" class="nav-item">KONTAKT</a>
-        </nav>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-        <main class="content-row">
-            <div class="col-content border-right">
-                <div class="text-wrapper">
-                    <h2>POZNAJ NAS</h2>
-                    <hr class="short-line">
-                    <p>
-                        WitrynaOdZera to studio tworzące nowoczesne strony internetowe dla lokalnych firm, które potrzebują spójnego, profesjonalnego wizerunku i lepszego brandingu.
-                    </p>
-                    <p>
-                        Projektujemy i wdrażamy estetyczne, funkcjonalne serwisy dopasowane do realnych potrzeb biznesowych - od koncepcji i UI/UX po finalne wdrożenie.
-                    </p>
-                    <p>
-                        Stawiamy na nowoczesny design, czytelną strukturę i rozwiązania szyte na miarę, bez gotowych schematów. Wyróżnia nas połączenie wysokiej jakości wykonania z konkurencyjnymi cenami, dzięki czemu dostarczamy skuteczne strony internetowe bez zbędnych kompromisów.
-                    </p>
-                    <div class="stars-container">
-                        <img src="assets/stars.svg" alt="Stars" class="stars-icon" loading="lazy">
+    <img src="" alt="Project Preview" class="portfolio-hover-img">
+
+    <nav>
+        <div class="nav-logo">WITRYNAODZERA</div>
+        <div class="nav-links">
+            <a href="#about" class="hover-target">O nas</a>
+            <a href="#pricing" class="hover-target">Cennik</a>
+            <a href="#portfolio" class="hover-target">Portfolio</a>
+            <a href="#contact" class="hover-target">Kontakt</a>
+        </div>
+    </nav>
+
+    <!-- Zwijamy treść w main, by wyizolować blura tylko na content i pominąć nav/kursor -->
+    <main id="main-content">
+        <section id="hero">
+            <div class="container">
+                <h1 class="hero-title anim-title-blur">
+                    <span>WITRYNA</span>
+                    <span class="outline">OD ZERA</span>
+                </h1>
+                <p class="hero-desc anim-fade">
+                    Jesteśmy studiem tworzącym nowoczesne, bezkompromisowe strony internetowe. Estetyka, kod i funkcja połączone w spójny wizerunek dla Twojej marki.
+                </p>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="line-separator anim-line"></div>
+                <div class="about-grid">
+                    <div>
+                        <h2 class="section-title anim-title">KIM<br>JESTEŚMY?</h2>
+                    </div>
+                    <div class="about-text anim-fade">
+                        <p>Założycielami WitrynaOdZera są <strong>Antoni Żabicki</strong> oraz <strong>Mateusz Drózd</strong>. Działamy głównie na terenie Poznania i Radomia, stawiając na nowoczesny design bez gotowych schematów.</p>
+                        <p>Projektujemy i wdrażamy serwisy dopasowane do realnych potrzeb biznesowych - od koncepcji UI/UX po finalne wdrożenie i branding.</p>
+                        
+                        <ul class="services-list">
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Tworzenie i hostowanie stron</div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Administracja i obsługa</div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Projektowanie logo i branding</div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Narzędzia Social Media</div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Optymalizacja SEO i SSL</div></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="col-spline border-right">
-                <div class="crop-container">
-                    <spline-viewer 
-                        loading-anim-type="none"
-                        url="https://prod.spline.design/B8De7wgTc7Wdz3Wh/scene.splinecode"
-                        events-target="global">
-                    </spline-viewer>
+        <section id="pricing">
+            <div class="container">
+                <div class="line-separator anim-line"></div>
+                <div class="pricing-wrap spotlight-card">
+                    <h2 class="section-title anim-title">KOMPLEKSOWY PAKIET</h2>
+                    <div class="price-huge anim-fade">400 <span>PLN+</span></div>
+                    
+                    <div class="pricing-details anim-fade">
+                        <div class="pricing-tag hover-target">Autorski projekt</div>
+                        <div class="pricing-tag hover-target">Optymalizacja SEO</div>
+                        <div class="pricing-tag hover-target">Szybkie ładowanie</div>
+                        <div class="pricing-tag hover-target">Logo / Branding</div>
+                        <div class="pricing-tag hover-target">Responsywność</div>
+                    </div>
+
+                    <p class="pricing-disclaimer anim-fade">
+                        Cena jest dynamiczna i zależy od zakresu projektu. Strona jest ważna rok od daty rejestracji domeny. Przedłużenie wiąże się z dodatkowym kosztem uzgodnionym na etapie realizacji.
+                    </p>
                 </div>
             </div>
+        </section>
 
-            <div class="col-socials">
-                <div class="spacer"></div>
-                <div class="footer-upper">
-                    <div class="social-group">
-                      
-                        <a id="link-instagram" href="https://www.instagram.com/witrynaodzera/" target="_blank" class="social-row">
-                           <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5.88-1.63a1.13 1.13 0 1 1 0 2.25 1.13 1.13 0 0 1 0-2.25z"/>
-</svg>
-                            <span class="social-text">@WITRYNAODZERA</span>
+        <section id="portfolio">
+            <div class="container">
+                <div class="line-separator anim-line"></div>
+                <h2 class="section-title anim-title" style="margin-bottom: 4vw;">PORTFOLIO</h2>
+                
+                <ul class="portfolio-list">
+                    <li class="portfolio-item hover-target no-invert" data-image="assets/stronaa1.png">
+                        <a href="https://what-is-next.vip/" target="_blank" class="portfolio-link">
+                            <span class="portfolio-name">what-is-next™</span>
+                            <span class="portfolio-desc">Kreatywna marka i wytwórnia muzyczna. Dynamiczność, liquid glass i interaktywność.</span>
                         </a>
-                    </div>
-                    <div class="barcode-wrapper">
-                        <img src="assets/barcode.svg" alt="Barcode" class="barcode-tall" loading="lazy">
-                    </div>
-                </div>
-                <div class="footer-divider"></div>
-                <div class="footer-lower">
-                    <p class="copy-year">&copy;2026</p>
-                    <h3 class="copy-brand">WITRYNAODZERA</h3>
-                </div>
+                    </li>
+                    <li class="portfolio-item hover-target no-invert" data-image="assets/stronab1.png">
+                        <a href="https://quei.lol/" target="_blank" class="portfolio-link">
+                            <span class="portfolio-name">quei.lol</span>
+                            <span class="portfolio-desc">Portfolio artysty z Poznania. Minimalistyczny design i spójna oprawa kolorystyczna.</span>
+                        </a>
+                    </li>
+                    <li class="portfolio-item hover-target no-invert" data-image="assets/stronac1.png">
+                        <a href="https://thetribbe.com/" target="_blank" class="portfolio-link">
+                            <span class="portfolio-name">The Tribbe</span>
+                            <span class="portfolio-desc">Projekt skupiający ambicje. Tajemniczość, symbolika totemu i dedykowane logo.</span>
+                        </a>
+                    </li>
+                    <li class="portfolio-item hover-target no-invert" data-image="assets/zdj4.png">
+                        <a href="#" target="_blank" class="portfolio-link">
+                            <span class="portfolio-name">wruszka.pl</span>
+                            <span class="portfolio-desc">Symulator kasyna online, który pomaga oduczyć się reakcji na bodźce hazardowe.</span>
+                        </a>
+                    </li>
+                    <li class="portfolio-item hover-target no-invert" data-image="assets/zdj5.png">
+                        <a href="#" target="_blank" class="portfolio-link">
+                            <span class="portfolio-name">foggy.dj</span>
+                            <span class="portfolio-desc">Oficjalna strona artysty FoGGy. Unikalny styl, jeden z naszych najlepszych projektów!</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </main>
-    </div>
+        </section>
 
-    <div id="ctx-menu" class="ctx-menu">
-        <a href="kontakt.html" class="ctx-item">KONTAKT</a>
-    </div>
+        <div class="marquee-wrap">
+            <div class="marquee">
+                <span>NAPISZ DO NAS</span> <span>✦</span>
+                <span>POROZMAWIAJMY O PROJEKCIE</span> <span>✦</span>
+                <span>ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+                <span>NAPISZ DO NAS</span> <span>✦</span>
+                <span>POROZMAWIAJMY O PROJEKCIE</span> <span>✦</span>
+                <span>ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+            </div>
+        </div>
 
-    <script src="script.js" defer></script>
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.59/build/spline-viewer.js"></script>
+        <section id="contact" style="min-height: 60vh;">
+            <div class="container contact-wrap">
+                <h2 class="section-title anim-title">ZACZNIJMY DZIAŁAĆ</h2>
+                <a href="mailto:kontakt@witrynaodzera.pl" class="contact-email hover-target anim-fade">
+                    kontakt@witrynaodzera.pl
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <div class="socials">
+                <a href="https://www.instagram.com/witrynaodzera/" target="_blank" class="hover-target">Instagram</a>
+            </div>
+            <div style="font-weight: 900; color: rgba(255,255,255,0.5);">&copy; 2026 WITRYNAODZERA (powered by what-is-next™)</div>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                direction: 'vertical',
+                gestureDirection: 'vertical',
+                smooth: true,
+            });
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            lenis.on('scroll', ScrollTrigger.update);
+            gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
+            gsap.ticker.lagSmoothing(0);
+
+            /* --- MOTION BLUR HYPER-SCROLL NA KLIK --- */
+            // Krzywa "Expo" dająca poczucie bardzo silnego przyspieszenia i zwolnienia
+            function easeInOutExpo(x) {
+                return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+            }
+
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const target = document.querySelector(targetId);
+
+                    if (target) {
+                        // Tworzymy rozmycie (motion blur), które osiąga szczyt w połowie czasu scrolla
+                        gsap.to('#main-content', {
+                            filter: "blur(20px)",
+                            duration: 0.6, // scroll trwa 1.2s, więc rośnie do połowy...
+                            ease: "power2.in",
+                            yoyo: true, // ...i opada
+                            repeat: 1
+                        });
+
+                        // Szybki zjazd używając krzywej Expo
+                        lenis.scrollTo(target, {
+                            duration: 1.2,
+                            easing: easeInOutExpo
+                        });
+                    }
+                });
+            });
+
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            
+            const blob1 = document.querySelector('.blob-1');
+            const blob2 = document.querySelector('.blob-2');
+            const blob3 = document.querySelector('.blob-3');
+
+            gsap.to(blob1, { scale: 1.1, rotation: 15, duration: 8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.to(blob2, { scale: 1.15, rotation: -15, duration: 10, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.set(blob3, { xPercent: -50, yPercent: -50 });
+
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                const winWidth = window.innerWidth;
+                const winHeight = window.innerHeight;
+
+                gsap.to(cursorDot, { x: posX, y: posY, duration: 0.1 });
+                gsap.to(cursorOutline, { x: posX, y: posY, duration: 0.5, ease: "power2.out" });
+
+                const normX = (posX / winWidth) * 2 - 1;
+                const normY = (posY / winHeight) * 2 - 1;
+                gsap.to(blob1, { x: normX * 60, y: normY * 60, duration: 2, ease: "power2.out" });
+                gsap.to(blob2, { x: normX * -80, y: normY * -80, duration: 3, ease: "power2.out" });
+                gsap.to(blob3, { x: posX, y: posY, duration: 1.5, ease: "power3.out" });
+            });
+
+            const hoverTargets = document.querySelectorAll('.hover-target');
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    cursorOutline.style.width = '60px';
+                    cursorOutline.style.height = '60px';
+                    cursorOutline.style.backgroundColor = 'white';
+
+                    if (target.classList.contains('no-invert')) {
+                        cursorOutline.style.mixBlendMode = 'normal';
+                        cursorDot.style.mixBlendMode = 'normal';
+                    } else {
+                        cursorOutline.style.mixBlendMode = 'difference';
+                    }
+                });
+                
+                target.addEventListener('mouseleave', () => {
+                    cursorOutline.style.width = '40px';
+                    cursorOutline.style.height = '40px';
+                    cursorOutline.style.backgroundColor = 'transparent';
+                    
+                    cursorOutline.style.mixBlendMode = 'difference';
+                    cursorDot.style.mixBlendMode = 'difference';
+                });
+            });
+
+            const spotlightCard = document.querySelector('.spotlight-card');
+            if(spotlightCard) {
+                spotlightCard.addEventListener('mousemove', (e) => {
+                    const rect = spotlightCard.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    spotlightCard.style.setProperty('--mouse-x', `${x}px`);
+                    spotlightCard.style.setProperty('--mouse-y', `${y}px`);
+                });
+            }
+
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            const hoverImg = document.querySelector('.portfolio-hover-img');
+            
+            gsap.set(hoverImg, { xPercent: 0, yPercent: 0 });
+
+            portfolioItems.forEach(item => {
+                item.addEventListener('mouseenter', (e) => {
+                    hoverImg.src = item.getAttribute('data-image');
+                    gsap.to(hoverImg, { opacity: 1, duration: 0.3 });
+                });
+                item.addEventListener('mousemove', (e) => {
+                    gsap.to(hoverImg, { 
+                        x: e.clientX + 15, 
+                        y: e.clientY + 15, 
+                        duration: 0.6, 
+                        ease: "power3.out" 
+                    });
+                });
+                item.addEventListener('mouseleave', () => {
+                    gsap.to(hoverImg, { opacity: 0, duration: 0.3 });
+                });
+            });
+
+            const blurTitles = document.querySelectorAll('.anim-title-blur span');
+            gsap.fromTo(blurTitles, 
+                { filter: "blur(20px)", opacity: 0, y: 30 },
+                { filter: "blur(0px)", opacity: 1, y: 0, duration: 1.5, stagger: 0.2, ease: "power3.out" }
+            );
+
+            const titles = document.querySelectorAll('.anim-title');
+            titles.forEach(title => {
+                gsap.fromTo(title, 
+                    { y: 50, opacity: 0 },
+                    { scrollTrigger: { trigger: title, start: "top 85%" }, y: 0, opacity: 1, duration: 1, ease: "power3.out" }
+                );
+            });
+
+            const lines = document.querySelectorAll('.anim-line');
+            lines.forEach(line => {
+                gsap.fromTo(line, 
+                    { scaleX: 0 },
+                    { scrollTrigger: { trigger: line, start: "top 90%" }, scaleX: 1, duration: 1.5, ease: "expo.out" }
+                );
+            });
+
+            const fades = document.querySelectorAll('.anim-fade');
+            fades.forEach(fade => {
+                gsap.fromTo(fade, 
+                    { y: 30, opacity: 0 },
+                    { scrollTrigger: { trigger: fade, start: "top 90%" }, y: 0, opacity: 1, duration: 1, delay: 0.2, ease: "power2.out" }
+                );
+            });
+
+            gsap.to('.marquee', {
+                xPercent: -50, ease: "none", duration: 15, repeat: -1
+            });
+        });
+    </script>
 </body>
 </html>
