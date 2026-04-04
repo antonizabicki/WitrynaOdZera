@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -564,7 +565,8 @@
         };
 
         let currentLang = 'pl';
-        if (window.location.pathname.replace(/\/$/, '').endsWith('/en')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('lang') === 'en') {
             currentLang = 'en';
         } else if (localStorage.getItem('lang') === 'en') {
             currentLang = 'en';
@@ -593,16 +595,11 @@
         document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('lang-pl').addEventListener('click', (e) => {
-                e.preventDefault();
-                setLang('pl');
-                window.history.pushState({}, '', '/');
-            });
-
-            document.getElementById('lang-en').addEventListener('click', (e) => {
-                e.preventDefault();
-                setLang('en');
-                window.history.pushState({}, '', '/en');
-            });
+    e.preventDefault(); setLang('pl'); window.history.pushState({}, '', window.location.pathname);
+});
+document.getElementById('lang-en').addEventListener('click', (e) => {
+    e.preventDefault(); setLang('en'); window.history.pushState({}, '', '?lang=en');
+});
 
             gsap.registerPlugin(ScrollTrigger);
 
