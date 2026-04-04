@@ -6,6 +6,11 @@
     <title>WITRYNAODZERA</title>
     <link rel="icon" type="image/svg+xml" href="assets/favicon.ico">
 
+    <!-- Font Instrument Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
@@ -23,6 +28,17 @@
             --bg: #000000;
             --fg: #ffffff;
             --font: 'Sequel', sans-serif;
+            --font-serif: 'Instrument Serif', serif;
+            
+            /* Zmienna naprawiająca zoom i skalowanie powyżej 1600px */
+            --vw: 1vw; 
+        }
+
+        /* Gdy ekran/zoom przekracza 1600px, blokujemy przyrost jednostek */
+        @media (min-width: 1600px) {
+            :root {
+                --vw: 16px;
+            }
         }
 
         * {
@@ -65,11 +81,10 @@
         .blob-2 { width: 40vw; height: 40vw; background: rgba(200, 200, 200, 0.04); bottom: -15%; right: -10%; }
         .blob-3 { width: 35vw; height: 35vw; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%); top: 0; left: 0; }
 
-        /* Pojemnik na treść (do efektu Motion Blur) */
         #main-content {
             position: relative;
             z-index: 1;
-            will-change: filter; /* Optymalizacja wydajności podczas bluru */
+            will-change: filter;
         }
 
         section, footer, .marquee-wrap, nav {
@@ -99,22 +114,33 @@
             .cursor-dot, .cursor-outline, .blobs-container { display: none !important; }
         }
 
+        .font-serif-italic {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-style: italic;
+            text-transform: lowercase; 
+            color: var(--fg);
+        }
+
         h1, h2, h3 { text-transform: uppercase; font-weight: 900; line-height: 0.85; }
         a { color: var(--fg); text-decoration: none; }
-        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 4vw; }
-        .line-separator { width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.2); margin: 4vw 0; transform-origin: left; }
+        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 calc(4 * var(--vw)); }
+        .line-separator { width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.2); margin: calc(4 * var(--vw)) 0; transform-origin: left; }
 
         nav {
             position: absolute;
             top: 0; left: 0;
-            width: 100%; padding: 2vw 4vw;
+            width: 100%; padding: calc(2 * var(--vw)) calc(4 * var(--vw));
             display: flex; justify-content: space-between; align-items: center;
             z-index: 100;
         }
-        .nav-logo { font-size: 1.2vw; font-weight: 900; letter-spacing: 2px; mix-blend-mode: difference; }
-        .nav-links { display: flex; gap: 3vw; mix-blend-mode: difference; }
+        
+        .nav-logo { mix-blend-mode: difference; z-index: 102; display: flex; align-items: center; }
+        .nav-logo img { height: calc(1.5 * var(--vw)); width: auto; pointer-events: none; }
+
+        .nav-links { display: flex; gap: calc(3 * var(--vw)); mix-blend-mode: difference; align-items: center; }
         .nav-links a {
-            font-size: 1vw; font-weight: bold; text-transform: uppercase; position: relative; overflow: hidden; padding-bottom: 2px;
+            font-size: calc(1 * var(--vw)); font-weight: bold; text-transform: uppercase; position: relative; overflow: hidden; padding-bottom: 2px;
         }
         .nav-links a::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
@@ -122,21 +148,30 @@
         }
         .nav-links a:hover::after { transform: translateX(0); }
 
+        .lang-switcher {
+            display: flex; gap: calc(1 * var(--vw)); margin-left: calc(2 * var(--vw)); align-items: center;
+        }
+        .lang-switcher a {
+            transition: opacity 0.3s ease;
+        }
+        .lang-switcher a::after { display: none !important; }
+
         section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 10vh 0; }
 
-        .hero-title { font-size: 11vw; white-space: nowrap; display: flex; flex-direction: column; }
+        .hero-title { font-size: calc(11 * var(--vw)); white-space: nowrap; display: flex; flex-direction: column; }
         .hero-title span { display: block; filter: blur(0px); }
-        .hero-title span.outline { color: transparent; -webkit-text-stroke: 2px var(--fg); margin-left: 10vw; }
-        .hero-desc { font-size: 1.5vw; max-width: 40vw; margin-top: 4vw; margin-left: auto; text-align: right; line-height: 1.4; color: #ccc; }
+        .hero-title span.outline { color: transparent; -webkit-text-stroke: 2px var(--fg); margin-left: calc(10 * var(--vw)); }
+        
+        .hero-desc { font-size: calc(1.5 * var(--vw)); max-width: calc(40 * var(--vw)); margin-top: calc(4 * var(--vw)); margin-left: auto; text-align: right; line-height: 1.4; color: #ccc; }
 
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5vw; }
-        .section-title { font-size: 6vw; }
-        .about-text p { font-size: 1.5vw; line-height: 1.5; margin-bottom: 2vw; color: #ccc; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: calc(5 * var(--vw)); }
+        .section-title { font-size: calc(6 * var(--vw)); }
+        .about-text p { font-size: calc(1.5 * var(--vw)); line-height: 1.5; margin-bottom: calc(2 * var(--vw)); color: #ccc; }
         .about-text strong { color: var(--fg); }
         
-        .services-list { list-style: none; margin-top: 3vw; }
+        .services-list { list-style: none; margin-top: calc(3 * var(--vw)); }
         .services-list li {
-            font-size: 1.2vw; padding: 1.5vw 0;
+            font-size: calc(1.2 * var(--vw)); padding: calc(1.5 * var(--vw)) 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             transition: border-bottom-color 0.3s ease;
         }
@@ -145,15 +180,15 @@
             display: flex; align-items: center;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .services-list li:hover .move-wrap { transform: translateX(1.5vw); }
-        .services-list .arrow { margin-right: 1vw; opacity: 0.5; }
+        .services-list li:hover .move-wrap { transform: translateX(calc(1.5 * var(--vw))); }
+        .services-list .arrow { margin-right: calc(1 * var(--vw)); opacity: 0.5; }
 
         .pricing-wrap {
             display: flex; flex-direction: column; align-items: center; text-align: center;
             position: relative;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 2vw; padding: 5vw 2vw;
+            border-radius: calc(2 * var(--vw)); padding: calc(5 * var(--vw)) calc(2 * var(--vw));
             overflow: hidden;
             width: 100%;
         }
@@ -165,33 +200,33 @@
         }
         .pricing-wrap:hover::before { opacity: 1; }
 
-        .price-huge { font-size: 10vw; font-weight: 900; margin: 2vw 0; pointer-events: none; }
-        .price-huge span { font-size: 3vw; vertical-align: top; pointer-events: none; }
-        .pricing-details { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vw; margin-bottom: 3vw; max-width: 80%; }
+        .price-huge { font-size: calc(10 * var(--vw)); font-weight: 900; margin: calc(2 * var(--vw)) 0; pointer-events: none; }
+        .price-huge span { font-size: calc(3 * var(--vw)); vertical-align: top; pointer-events: none; }
+        .pricing-details { display: flex; flex-wrap: wrap; justify-content: center; gap: calc(1 * var(--vw)); margin-bottom: calc(3 * var(--vw)); max-width: 80%; }
         .pricing-tag {
-            border: 1px solid rgba(255,255,255,0.3); padding: 0.8vw 1.5vw; border-radius: 50px;
-            font-size: 1vw; text-transform: uppercase; transition: background-color 0.3s, border-color 0.3s;
+            border: 1px solid rgba(255,255,255,0.3); padding: calc(0.8 * var(--vw)) calc(1.5 * var(--vw)); border-radius: 50px;
+            font-size: calc(1 * var(--vw)); text-transform: uppercase; transition: background-color 0.3s, border-color 0.3s;
         }
         .pricing-tag:hover { background-color: var(--fg); color: var(--bg); border-color: var(--fg); }
-        .pricing-disclaimer { font-size: 0.9vw; color: #666; max-width: 50vw; text-align: center; pointer-events: none; margin: 0 auto; }
+        .pricing-disclaimer { font-size: calc(0.9 * var(--vw)); color: #666; max-width: calc(50 * var(--vw)); text-align: center; pointer-events: none; margin: 0 auto; }
 
         .portfolio-list { list-style: none; width: 100%; }
-        .portfolio-item { border-bottom: 1px solid rgba(255,255,255,0.2); padding: 3vw 0; position: relative; }
+        .portfolio-item { border-bottom: 1px solid rgba(255,255,255,0.2); padding: calc(3 * var(--vw)) 0; position: relative; }
         .portfolio-item:first-child { border-top: 1px solid rgba(255,255,255,0.2); }
         .portfolio-link { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .portfolio-name { font-size: 5vw; font-weight: 900; text-transform: lowercase; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .portfolio-desc { font-size: 1vw; max-width: 25vw; text-align: right; opacity: 0.5; transition: opacity 0.3s; }
-        .portfolio-item:hover .portfolio-name { transform: translateX(2vw); }
+        .portfolio-name { font-size: calc(5 * var(--vw)); font-weight: 900; text-transform: lowercase; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .portfolio-desc { font-size: calc(1 * var(--vw)); max-width: calc(25 * var(--vw)); text-align: right; opacity: 0.5; transition: opacity 0.3s; }
+        .portfolio-item:hover .portfolio-name { transform: translateX(calc(2 * var(--vw))); }
         .portfolio-item:hover .portfolio-desc { opacity: 1; }
         .portfolio-hover-img {
-            position: fixed; top: 0; left: 0; width: 25vw; height: 14vw;
+            position: fixed; top: 0; left: 0; width: calc(25 * var(--vw)); height: calc(14 * var(--vw));
             object-fit: cover; pointer-events: none; opacity: 0; z-index: 10; border-radius: 4px;
         }
 
         .contact-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; justify-content: center; }
         .contact-email {
-            font-size: clamp(1.5rem, 4vw, 3rem); display: inline-block; margin-top: 5vw;
-            position: relative; color: var(--fg); text-decoration: none; padding-bottom: 0.5vw;
+            font-size: clamp(1.5rem, calc(4 * var(--vw)), 3rem); display: inline-block; margin-top: calc(5 * var(--vw));
+            position: relative; color: var(--fg); text-decoration: none; padding-bottom: calc(0.5 * var(--vw));
             transition: color 0.3s ease; white-space: nowrap;
         }
         .contact-email::after {
@@ -202,26 +237,34 @@
         .contact-email:hover::after { transform: scaleX(0); transform-origin: left; }
 
         footer {
-            padding: 2vw 4vw; display: flex; justify-content: space-between; align-items: center;
+            padding: calc(2 * var(--vw)) calc(4 * var(--vw)); display: flex; justify-content: space-between; align-items: center;
             border-top: 1px solid rgba(255,255,255,0.2); margin-top: 5vh;
         }
-        .socials a { font-size: 1vw; margin-right: 2vw; text-transform: uppercase; position: relative; }
+        .socials a { font-size: calc(1 * var(--vw)); margin-right: calc(2 * var(--vw)); text-transform: uppercase; position: relative; }
         .socials a::after {
             content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 1px;
             background: var(--fg); transform: scaleX(0); transition: transform 0.3s ease; transform-origin: right;
         }
         .socials a:hover::after { transform: scaleX(1); transform-origin: left; }
 
+        /* --- MARQUEE BEZ LUK --- */
         .marquee-wrap {
-            width: 100%; overflow: hidden; border-top: 1px solid var(--fg); border-bottom: 1px solid var(--fg);
-            padding: 1vw 0; background: var(--fg); color: var(--bg); margin-top: 5vw;
+            width: 100vw; overflow: hidden; border-top: 1px solid var(--fg); border-bottom: 1px solid var(--fg);
+            padding: calc(1 * var(--vw)) 0; background: var(--fg); color: var(--bg); margin-top: calc(5 * var(--vw));
         }
-        .marquee { display: flex; white-space: nowrap; }
-        .marquee span { font-size: 2vw; font-weight: 900; text-transform: uppercase; padding: 0 2vw; }
+        .marquee { 
+            display: flex; align-items: center; width: max-content; 
+        }
+        .marquee-content {
+            display: flex; flex-shrink: 0; align-items: center;
+        }
+        .marquee span { 
+            font-size: calc(2 * var(--vw)); font-weight: 900; text-transform: uppercase; padding: 0 calc(2 * var(--vw)); white-space: nowrap;
+        }
 
         @media (max-width: 1024px) {
-            .nav-logo, .nav-links a, .socials a, .pricing-tag, .pricing-disclaimer, .portfolio-desc { font-size: 14px; }
-            .nav-logo { font-size: 18px; }
+            .nav-links a, .socials a, .pricing-tag, .pricing-disclaimer, .portfolio-desc { font-size: 14px; }
+            .nav-logo img { height: 20px; }
             .hero-desc, .about-text p, .services-list li { font-size: 16px; }
             .hero-title { font-size: 13vw; }
             .hero-title span.outline { margin-left: 0; }
@@ -231,7 +274,7 @@
             .portfolio-link { flex-direction: column; align-items: center; text-align: center; }
             .portfolio-desc { text-align: center; max-width: 100%; margin-top: 10px; opacity: 1; }
             .price-huge { font-size: 15vw; }
-            .marquee span { font-size: 6vw; }
+            .marquee span { font-size: 6vw; padding: 0 4vw; }
             .pricing-wrap { padding: 8vw 4vw; border-radius: 4vw; }
         }
 
@@ -239,11 +282,16 @@
             section { padding: 8vh 0; text-align: center; }
             .container { padding: 0 5vw; display: flex; flex-direction: column; align-items: center; }
             
-            nav { flex-direction: column; padding: 6vw 4vw; gap: 4vw; align-items: center; position: relative; }
-            .nav-logo { font-size: 6vw; letter-spacing: 1px; }
+            nav { flex-direction: column; padding: 6vw 4vw; align-items: center; position: relative; }
+            
+            /* Całkowicie ukryte logo na telefonach */
+            .nav-logo { display: none !important; } 
+
             .nav-links { width: 100%; justify-content: center; gap: 4vw; flex-wrap: wrap; }
             .nav-links a { font-size: 3.5vw; }
             
+            .lang-switcher { margin-left: 0; width: 100%; justify-content: center; gap: 4vw; margin-top: 2vw; }
+
             .hero-title { font-size: 13vw; align-items: center; }
             .hero-title span { white-space: nowrap; }
             .hero-title span.outline { -webkit-text-stroke: 1px var(--fg); }
@@ -272,8 +320,6 @@
             .portfolio-item:hover .portfolio-name { transform: none; }
             .portfolio-desc { font-size: 4vw; }
             
-            .marquee span { font-size: 8vw; padding: 0 4vw; }
-            
             .contact-wrap { align-items: center; justify-content: center; }
             .contact-email { font-size: clamp(1rem, 4.5vw, 2rem); margin-top: 8vw; padding-bottom: 2vw; white-space: nowrap; }
             
@@ -298,16 +344,22 @@
     <img src="" alt="Project Preview" class="portfolio-hover-img">
 
     <nav>
-        <div class="nav-logo">WITRYNAODZERA</div>
+        <div class="nav-logo hover-target no-invert">
+            <img src="woz.svg" alt="WITRYNAODZERA Logo">
+        </div>
         <div class="nav-links">
-            <a href="#about" class="hover-target">O nas</a>
-            <a href="#pricing" class="hover-target">Cennik</a>
-            <a href="#portfolio" class="hover-target">Portfolio</a>
-            <a href="#contact" class="hover-target">Kontakt</a>
+            <a href="#about" class="hover-target" data-i18n="nav_about">O nas</a>
+            <a href="#pricing" class="hover-target" data-i18n="nav_pricing">Cennik</a>
+            <a href="#portfolio" class="hover-target" data-i18n="nav_portfolio">Portfolio</a>
+            <a href="#contact" class="hover-target" data-i18n="nav_contact">Kontakt</a>
+            
+            <div class="lang-switcher">
+                <a href="#" id="lang-pl" class="hover-target">PL</a>
+                <a href="#" id="lang-en" class="hover-target">EN</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Zwijamy treść w main, by wyizolować blura tylko na content i pominąć nav/kursor -->
     <main id="main-content">
         <section id="hero">
             <div class="container">
@@ -315,7 +367,7 @@
                     <span>WITRYNA</span>
                     <span class="outline">OD ZERA</span>
                 </h1>
-                <p class="hero-desc anim-fade">
+                <p class="hero-desc anim-fade" data-i18n="hero_desc">
                     Jesteśmy studiem tworzącym nowoczesne, bezkompromisowe strony internetowe. Estetyka, kod i funkcja połączone w spójny wizerunek dla Twojej marki.
                 </p>
             </div>
@@ -326,18 +378,21 @@
                 <div class="line-separator anim-line"></div>
                 <div class="about-grid">
                     <div>
-                        <h2 class="section-title anim-title">KIM<br>JESTEŚMY?</h2>
+                        <h2 class="section-title anim-title">
+                            <span data-i18n="about_title_1">KIM</span><br>
+                            <span class="font-serif-italic" data-i18n="about_title_2">jesteśmy?</span>
+                        </h2>
                     </div>
                     <div class="about-text anim-fade">
-                        <p>Założycielami WitrynaOdZera są <strong>Antoni Żabicki</strong> oraz <strong>Mateusz Drózd</strong>. Działamy głównie na terenie Poznania i Radomia, stawiając na nowoczesny design bez gotowych schematów.</p>
-                        <p>Projektujemy i wdrażamy serwisy dopasowane do realnych potrzeb biznesowych - od koncepcji UI/UX po finalne wdrożenie i branding.</p>
+                        <p data-i18n="about_p1">Założycielami WitrynaOdZera są <strong>Antoni Żabicki</strong> oraz <strong>Mateusz Drózd</strong>. Działamy głównie na terenie Poznania i Radomia, stawiając na nowoczesny design bez gotowych schematów.</p>
+                        <p data-i18n="about_p2">Projektujemy i wdrażamy serwisy dopasowane do realnych potrzeb biznesowych - od koncepcji UI/UX po finalne wdrożenie i branding.</p>
                         
                         <ul class="services-list">
-                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Tworzenie i hostowanie stron</div></li>
-                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Administracja i obsługa</div></li>
-                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Projektowanie logo i branding</div></li>
-                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Narzędzia Social Media</div></li>
-                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> Optymalizacja SEO i SSL</div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> <span data-i18n="srv_1">Tworzenie i hostowanie stron</span></div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> <span data-i18n="srv_2">Administracja i obsługa</span></div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> <span data-i18n="srv_3">Projektowanie logo i branding</span></div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> <span data-i18n="srv_4">Narzędzia Social Media</span></div></li>
+                            <li class="hover-target"><div class="move-wrap"><span class="arrow">→</span> <span data-i18n="srv_5">Optymalizacja SEO i SSL</span></div></li>
                         </ul>
                     </div>
                 </div>
@@ -348,18 +403,18 @@
             <div class="container">
                 <div class="line-separator anim-line"></div>
                 <div class="pricing-wrap spotlight-card">
-                    <h2 class="section-title anim-title">KOMPLEKSOWY PAKIET</h2>
-                    <div class="price-huge anim-fade">400 <span>PLN+</span></div>
+                    <h2 class="section-title anim-title" data-i18n="price_title">KOMPLEKSOWY PAKIET</h2>
+                    <div class="price-huge anim-fade">400 <span class="font-serif-italic" style="text-transform:none;">PLN+</span></div>
                     
                     <div class="pricing-details anim-fade">
-                        <div class="pricing-tag hover-target">Autorski projekt</div>
-                        <div class="pricing-tag hover-target">Optymalizacja SEO</div>
-                        <div class="pricing-tag hover-target">Szybkie ładowanie</div>
-                        <div class="pricing-tag hover-target">Logo / Branding</div>
-                        <div class="pricing-tag hover-target">Responsywność</div>
+                        <div class="pricing-tag hover-target" data-i18n="tag_1">Autorski projekt</div>
+                        <div class="pricing-tag hover-target" data-i18n="tag_2">Optymalizacja SEO</div>
+                        <div class="pricing-tag hover-target" data-i18n="tag_3">Szybkie ładowanie</div>
+                        <div class="pricing-tag hover-target" data-i18n="tag_4">Logo / Branding</div>
+                        <div class="pricing-tag hover-target" data-i18n="tag_5">Responsywność</div>
                     </div>
 
-                    <p class="pricing-disclaimer anim-fade">
+                    <p class="pricing-disclaimer anim-fade" data-i18n="price_desc">
                         Cena jest dynamiczna i zależy od zakresu projektu. Strona jest ważna rok od daty rejestracji domeny. Przedłużenie wiąże się z dodatkowym kosztem uzgodnionym na etapie realizacji.
                     </p>
                 </div>
@@ -369,69 +424,87 @@
         <section id="portfolio">
             <div class="container">
                 <div class="line-separator anim-line"></div>
-                <h2 class="section-title anim-title" style="margin-bottom: 4vw;">PORTFOLIO</h2>
+                <h2 class="section-title anim-title" style="margin-bottom: 4vw;" data-i18n="port_title">PORTFOLIO</h2>
                 
                 <ul class="portfolio-list">
                     <li class="portfolio-item hover-target no-invert" data-image="assets/stronaa1.png">
                         <a href="https://what-is-next.vip/" target="_blank" class="portfolio-link">
                             <span class="portfolio-name">what-is-next™</span>
-                            <span class="portfolio-desc">Kreatywna marka i wytwórnia muzyczna. Dynamiczność, liquid glass i interaktywność.</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_1">Kreatywna marka i wytwórnia muzyczna. Dynamiczność, liquid glass i interaktywność.</span>
                         </a>
                     </li>
                     <li class="portfolio-item hover-target no-invert" data-image="assets/stronab1.png">
                         <a href="https://quei.lol/" target="_blank" class="portfolio-link">
                             <span class="portfolio-name">quei.lol</span>
-                            <span class="portfolio-desc">Portfolio artysty z Poznania. Minimalistyczny design i spójna oprawa kolorystyczna.</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_2">Portfolio artysty z Poznania. Minimalistyczny design i spójna oprawa kolorystyczna.</span>
                         </a>
                     </li>
                     <li class="portfolio-item hover-target no-invert" data-image="assets/stronac1.png">
                         <a href="https://thetribbe.com/" target="_blank" class="portfolio-link">
                             <span class="portfolio-name">The Tribbe</span>
-                            <span class="portfolio-desc">Projekt skupiający ambicje. Tajemniczość, symbolika totemu i dedykowane logo.</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_3">Projekt skupiający ambicje. Tajemniczość, symbolika totemu i dedykowane logo.</span>
                         </a>
                     </li>
                     <li class="portfolio-item hover-target no-invert" data-image="assets/zdj4.png">
                         <a href="https://wruszka.pl/" target="_blank" class="portfolio-link">
                             <span class="portfolio-name">wruszka.pl</span>
-                            <span class="portfolio-desc">Symulator kasyna online, który pomaga oduczyć się reakcji na bodźce hazardowe.</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_4">Symulator kasyna online, który pomaga oduczyć się reakcji na bodźce hazardowe.</span>
                         </a>
                     </li>
                     <li class="portfolio-item hover-target no-invert" data-image="assets/zdj5.png">
                         <a href="https://foggy.dj/" target="_blank" class="portfolio-link">
                             <span class="portfolio-name">foggy.dj</span>
-                            <span class="portfolio-desc">Oficjalna strona artysty FoGGy. Unikalny styl, jeden z naszych najlepszych projektów!</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_5">Oficjalna strona artysty FoGGy. Unikalny styl, jeden z naszych najlepszych projektów!</span>
                         </a>
                     </li>
                     <li class="portfolio-item hover-target no-invert" data-image="assets/zdj67.png">
                         <a href="https://antonizabicki.pl/" target="_blank" class="portfolio-link">
                             <span class="portfolio-name">antonizabicki.pl</span>
-                            <span class="portfolio-desc">Portfolio Antoniego Żabickiego</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_6">Portfolio Antoniego Żabickiego</span>
                         </a>
                     </li>
                     <li class="portfolio-item hover-target no-invert" data-image="assets/vvaav-1.png">
-                        <a href="https://>vvaav.art/" target="_blank" class="portfolio-link">
+                        <a href="https://vvaav.art/" target="" class="portfolio-link">
                             <span class="portfolio-name">vvaav.art</span>
-                            <span class="portfolio-desc">Portfolio artysty vvaav.</span>
+                            <span class="portfolio-desc" data-i18n="port_desc_7">Portfolio artysty vvaav.</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </section>
 
+        <!-- Struktura przygotowana specjalnie pod pętlę bez dziur i cięć -->
         <div class="marquee-wrap">
             <div class="marquee">
-                <span>NAPISZ DO NAS</span> <span>✦</span>
-                <span>POROZMAWIAJMY O PROJEKCIE</span> <span>✦</span>
-                <span>ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
-                <span>NAPISZ DO NAS</span> <span>✦</span>
-                <span>POROZMAWIAJMY O PROJEKCIE</span> <span>✦</span>
-                <span>ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+                <!-- Blok 1 -->
+                <div class="marquee-content">
+                    <span data-i18n="mq_1">NAPISZ DO NAS</span> <span>✦</span>
+                    <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
+                    <span data-i18n="mq_3">ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+                    
+                    <span data-i18n="mq_1">NAPISZ DO NAS</span> <span>✦</span>
+                    <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
+                    <span data-i18n="mq_3">ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+                </div>
+                <!-- Blok 2 (1:1 klon bloku 1 - niezbędne do płynnego zapętlenia) -->
+                <div class="marquee-content" aria-hidden="true">
+                    <span data-i18n="mq_1">NAPISZ DO NAS</span> <span>✦</span>
+                    <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
+                    <span data-i18n="mq_3">ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+                    
+                    <span data-i18n="mq_1">NAPISZ DO NAS</span> <span>✦</span>
+                    <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
+                    <span data-i18n="mq_3">ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
+                </div>
             </div>
         </div>
 
         <section id="contact" style="min-height: 60vh;">
             <div class="container contact-wrap">
-                <h2 class="section-title anim-title">ZACZNIJMY DZIAŁAĆ</h2>
+                <h2 class="section-title anim-title">
+                    <span data-i18n="contact_title_1">ZACZNIJMY</span>
+                    <span class="font-serif-italic" data-i18n="contact_title_2">działać</span>
+                </h2>
                 <a href="mailto:kontakt@witrynaodzera.pl" class="contact-email hover-target anim-fade">
                     kontakt@witrynaodzera.pl
                 </a>
@@ -447,7 +520,90 @@
     </main>
 
     <script>
+        const translations = {
+            pl: {
+                nav_about: "O nas", nav_pricing: "Cennik", nav_portfolio: "Portfolio", nav_contact: "Kontakt",
+                hero_desc: "Jesteśmy studiem tworzącym nowoczesne, bezkompromisowe strony internetowe. Estetyka, kod i funkcja połączone w spójny wizerunek dla Twojej marki.",
+                about_title_1: "KIM", about_title_2: "jesteśmy?",
+                about_p1: "Założycielami WitrynaOdZera są <strong>Antoni Żabicki</strong> oraz <strong>Mateusz Drózd</strong>. Działamy głównie na terenie Poznania i Radomia, stawiając na nowoczesny design bez gotowych schematów.",
+                about_p2: "Projektujemy i wdrażamy serwisy dopasowane do realnych potrzeb biznesowych - od koncepcji UI/UX po finalne wdrożenie i branding.",
+                srv_1: "Tworzenie i hostowanie stron", srv_2: "Administracja i obsługa", srv_3: "Projektowanie logo i branding", srv_4: "Narzędzia Social Media", srv_5: "Optymalizacja SEO i SSL",
+                price_title: "KOMPLEKSOWY PAKIET",
+                tag_1: "Autorski projekt", tag_2: "Optymalizacja SEO", tag_3: "Szybkie ładowanie", tag_4: "Logo / Branding", tag_5: "Responsywność",
+                price_desc: "Cena jest dynamiczna i zależy od zakresu projektu. Strona jest ważna rok od daty rejestracji domeny. Przedłużenie wiąże się z dodatkowym kosztem uzgodnionym na etapie realizacji.",
+                port_title: "PORTFOLIO",
+                port_desc_1: "Kreatywna marka i wytwórnia muzyczna. Dynamiczność, liquid glass i interaktywność.",
+                port_desc_2: "Portfolio artysty z Poznania. Minimalistyczny design i spójna oprawa kolorystyczna.",
+                port_desc_3: "Projekt skupiający ambicje. Tajemniczość, symbolika totemu i dedykowane logo.",
+                port_desc_4: "Symulator kasyna online, który pomaga oduczyć się reakcji na bodźce hazardowe.",
+                port_desc_5: "Oficjalna strona artysty FoGGy. Unikalny styl, jeden z naszych najlepszych projektów!",
+                port_desc_6: "Portfolio Antoniego Żabickiego", port_desc_7: "Portfolio artysty vvaav.",
+                mq_1: "NAPISZ DO NAS", mq_2: "porozmawiajmy o projekcie", mq_3: "ZBUDUJMY COŚ RAZEM",
+                contact_title_1: "ZACZNIJMY", contact_title_2: "działać"
+            },
+            en: {
+                nav_about: "About us", nav_pricing: "Pricing", nav_portfolio: "Portfolio", nav_contact: "Contact",
+                hero_desc: "We are a studio creating modern, uncompromising websites. Aesthetics, code, and function combined into a cohesive image for your brand.",
+                about_title_1: "WHO", about_title_2: "are we?",
+                about_p1: "The founders of WitrynaOdZera are <strong>Antoni Żabicki</strong> and <strong>Mateusz Drózd</strong>. We operate mainly in Poznań and Radom, focusing on modern design without ready-made templates.",
+                about_p2: "We design and implement websites tailored to real business needs - from UI/UX concepts to final deployment and branding.",
+                srv_1: "Website creation & hosting", srv_2: "Administration & support", srv_3: "Logo design & branding", srv_4: "Social Media tools", srv_5: "SEO optimization & SSL",
+                price_title: "COMPREHENSIVE PACKAGE",
+                tag_1: "Custom design", tag_2: "SEO Optimization", tag_3: "Fast loading", tag_4: "Logo / Branding", tag_5: "Responsiveness",
+                price_desc: "The price is dynamic and depends on the project scope. The website is valid for one year from the domain registration date. Renewal involves an additional cost agreed upon during the implementation stage.",
+                port_title: "PORTFOLIO",
+                port_desc_1: "Creative brand and music label. Dynamism, liquid glass, and interactivity.",
+                port_desc_2: "Portfolio of a Poznań-based artist. Minimalist design and cohesive color scheme.",
+                port_desc_3: "A project bringing ambitions together. Mystery, totem symbolism, and a dedicated logo.",
+                port_desc_4: "Online casino simulator that helps unlearn reactions to gambling stimuli.",
+                port_desc_5: "Official website of artist FoGGy. Unique style, one of our best projects!",
+                port_desc_6: "Antoni Żabicki's Portfolio", port_desc_7: "Portfolio of the artist vvaav.",
+                mq_1: "WRITE TO US", mq_2: "let's talk about the project", mq_3: "LET'S BUILD SOMETHING TOGETHER",
+                contact_title_1: "LET'S", contact_title_2: "get started"
+            }
+        };
+
+        let currentLang = 'pl';
+        if (window.location.pathname.replace(/\/$/, '').endsWith('/en')) {
+            currentLang = 'en';
+        } else if (localStorage.getItem('lang') === 'en') {
+            currentLang = 'en';
+        }
+
+        function setLang(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            
+            const btnPl = document.getElementById('lang-pl');
+            const btnEn = document.getElementById('lang-en');
+            if(btnPl && btnEn) {
+                btnPl.style.opacity = lang === 'pl' ? '1' : '0.4';
+                btnEn.style.opacity = lang === 'en' ? '1' : '0.4';
+            }
+            localStorage.setItem('lang', lang);
+        }
+
+        setLang(currentLang);
+
         document.addEventListener('DOMContentLoaded', () => {
+
+            document.getElementById('lang-pl').addEventListener('click', (e) => {
+                e.preventDefault();
+                setLang('pl');
+                window.history.pushState({}, '', '/');
+            });
+
+            document.getElementById('lang-en').addEventListener('click', (e) => {
+                e.preventDefault();
+                setLang('en');
+                window.history.pushState({}, '', '/en');
+            });
+
             gsap.registerPlugin(ScrollTrigger);
 
             const lenis = new Lenis({
@@ -468,13 +624,11 @@
             gsap.ticker.add((time)=>{ lenis.raf(time * 1000) });
             gsap.ticker.lagSmoothing(0);
 
-            /* --- MOTION BLUR HYPER-SCROLL NA KLIK --- */
-            // Krzywa "Expo" dająca poczucie bardzo silnego przyspieszenia i zwolnienia
             function easeInOutExpo(x) {
                 return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
             }
 
-            const navLinks = document.querySelectorAll('.nav-links a');
+            const navLinks = document.querySelectorAll('.nav-links a:not(#lang-pl):not(#lang-en)');
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -482,16 +636,14 @@
                     const target = document.querySelector(targetId);
 
                     if (target) {
-                        // Tworzymy rozmycie (motion blur), które osiąga szczyt w połowie czasu scrolla
                         gsap.to('#main-content', {
                             filter: "blur(20px)",
-                            duration: 0.6, // scroll trwa 1.2s, więc rośnie do połowy...
+                            duration: 0.6,
                             ease: "power2.in",
-                            yoyo: true, // ...i opada
+                            yoyo: true,
                             repeat: 1
                         });
 
-                        // Szybki zjazd używając krzywej Expo
                         lenis.scrollTo(target, {
                             duration: 1.2,
                             easing: easeInOutExpo
@@ -616,8 +768,12 @@
                 );
             });
 
+            // Poprawiona pętla z użyciem nowej struktury HTML
             gsap.to('.marquee', {
-                xPercent: -50, ease: "none", duration: 15, repeat: -1
+                xPercent: -50, 
+                ease: "none", 
+                duration: 20, 
+                repeat: -1
             });
         });
     </script>
