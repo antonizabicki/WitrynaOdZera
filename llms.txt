@@ -1,0 +1,48 @@
+# WitrynaOdZera
+
+> WitrynaOdZera to studio web developmentowe specjalizujące się w projektowaniu i tworzeniu wydajnych, konwertujących stron internetowych od zera (custom websites), z silnym naciskiem na optymalizację SEO oraz UX/UI.
+
+## Najważniejsze informacje i linki (Sitemap)
+- [Strona główna](https://witrynaodzera.pl)
+- [Kontakt](mailto:kontakt@witrynaodzera.pl)
+- [Oferta](https://witrynaodzera.pl/oferta) *(dostosuj ten link, jeśli istnieje)*
+- [Portfolio](https://witrynaodzera.pl/portfolio) *(dostosuj ten link, jeśli istnieje)*
+
+## Profil działalności (Core Value Proposition)
+- Tworzenie stron indywidualnie (custom code), domyślnie bez użycia gotowych szablonów.
+- Priorytet: optymalizacja pod SEO, szybkość ładowania (Core Web Vitals) i wysoka konwersja (sprzedaż, leady).
+- Brak vendor lock-in (w większości projektów).
+- Skalowalność i gotowość do dalszej rozbudowy.
+- Podejście projektowe UX-first.
+
+## Usługi
+1. **Tworzenie stron internetowych**: Strony firmowe, usługowe i portfolio budowane od podstaw (struktura, UX, UI, frontend, backend).
+2. **Landing Pages**: Strony zoptymalizowane pod kampanie reklamowe, generowanie leadów i sprzedaż (nacisk na testy konwersji i CTA).
+3. **Sklepy internetowe (e-commerce)**: Wdrażanie WooCommerce i rozwiązań customowych (płatności online, integracje logistyczne).
+4. **Redesign i optymalizacja**: Audyt i poprawa istniejących stron pod kątem UI, UX, szybkości oraz SEO.
+5. **SEO i Wydajność**: Optymalizacja techniczna, struktura HTML, przyspieszenie czasu ładowania, optymalizacja treści i obrazów.
+6. **Integracje**: Łączenie stron z API, systemami płatności (Stripe, PayU), systemami CRM i narzędziami marketingowymi.
+
+## Technologie (Tech Stack)
+- **Frontend**: HTML, CSS, JavaScript, React, Next.js.
+- **Backend / CMS**: Node.js, WordPress (wyłącznie custom implementation).
+- **Analityka**: Narzędzia SEO, Google Analytics.
+
+## Proces współpracy (Workflow)
+1. **Analiza**: Zrozumienie biznesu i określenie celów strony.
+2. **Projekt UX/UI**: Architektura informacji, makiety (wireframes), design wizualny.
+3. **Development**: Kodowanie i implementacja funkcji.
+4. **Testy**: Wydajność, responsywność (RWD), QA.
+5. **Wdrożenie**: Publikacja, konfiguracja hostingu i domeny.
+6. **Utrzymanie**: Stała opieka, aktualizacje i rozwój funkcji (opcjonalnie).
+
+## FAQ / Warunki biznesowe
+- **Czas realizacji**: Od 1 do 6 tygodni, w zależności od skali projektu.
+- **Wycena**: Indywidualna na podstawie wymagań. Proste strony od kilku tysięcy PLN, średnie kilkanaście tysięcy PLN, zaawansowane projekty (np. dedykowane sklepy) wyceniane osobno.
+- **Grupa docelowa**: Małe i średnie firmy (MŚP), startupy, marki osobiste, freelancerzy, e-commerce.
+- **Zasięg**: Polska i zagranica (współpraca 100% zdalna/remote).
+- **Szablony**: Firma nie opiera swoich prac na gotowych szablonach/motywach, chyba że wymaga tego klient lub budżet.
+
+## Kontakt
+- Website: https://witrynaodzera.pl
+- Email: kontakt@witrynaodzera.pl
