@@ -7,7 +7,7 @@
     <title>WITRYNAODZERA</title>
     <link rel="icon" type="image/svg+xml" href="assets/favicon.ico">
 
-    <!-- Font Instrument Serif -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -31,11 +31,11 @@
             --font: 'Sequel', sans-serif;
             --font-serif: 'Instrument Serif', serif;
             
-            /* Zmienna naprawiająca zoom i skalowanie powyżej 1600px */
+
             --vw: 1vw; 
         }
 
-        /* Gdy ekran/zoom przekracza 1600px, blokujemy przyrost jednostek */
+ 
         @media (min-width: 1600px) {
             :root {
                 --vw: 16px;
@@ -285,7 +285,7 @@
             
             nav { flex-direction: column; padding: 6vw 4vw; align-items: center; position: relative; }
             
-            /* Całkowicie ukryte logo na telefonach */
+
             .nav-logo { display: none !important; } 
 
             .nav-links { width: 100%; justify-content: center; gap: 4vw; flex-wrap: wrap; }
@@ -474,10 +474,10 @@
             </div>
         </section>
 
-        <!-- Struktura przygotowana specjalnie pod pętlę bez dziur i cięć -->
+        
         <div class="marquee-wrap">
             <div class="marquee">
-                <!-- Blok 1 -->
+                
                 <div class="marquee-content">
                     <span data-i18n="mq_1">NAPISZ DO NAS</span> <span>✦</span>
                     <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
@@ -487,7 +487,7 @@
                     <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
                     <span data-i18n="mq_3">ZBUDUJMY COŚ RAZEM</span> <span>✦</span>
                 </div>
-                <!-- Blok 2 (1:1 klon bloku 1 - niezbędne do płynnego zapętlenia) -->
+                
                 <div class="marquee-content" aria-hidden="true">
                     <span data-i18n="mq_1">NAPISZ DO NAS</span> <span>✦</span>
                     <span class="font-serif-italic" data-i18n="mq_2">porozmawiajmy o projekcie</span> <span>✦</span>
@@ -765,7 +765,7 @@ document.getElementById('lang-en').addEventListener('click', (e) => {
                 );
             });
 
-            // Poprawiona pętla z użyciem nowej struktury HTML
+    
             gsap.to('.marquee', {
                 xPercent: -50, 
                 ease: "none", 
