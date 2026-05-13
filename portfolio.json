@@ -15,7 +15,7 @@
         "title": "quei.lol",
         "subtitle": "Portfolio artysty z Poznania. Minimalistyczny design i spójna oprawa kolorystyczna",
         "subtitle_en": "Portfolio of a Poznań-based artist. Minimalist design and cohesive color scheme.",
-        "image": "assets/stronab1.png"
+        "image": "assets/queiweb1.png"
     },
     {
         "title": "The Tribbe",
@@ -28,6 +28,12 @@
         "subtitle": "Symulator kasyna online, który pomaga oduczyć się reakcji na bodźce hazardowe",
         "subtitle_en": "Online casino simulator that helps unlearn reactions to gambling stimuli.",
         "image": "assets/zdj4.png"
+    },
+    {
+        "title": "przekminka.pl",
+        "subtitle": "Gra przeglądarkowa skupiona na zgadywaniu miejsc na świecie.",
+        "subtitle_en": "Browser game focused on guessing places around the world.",
+        "image": "assets/przekminka.png"
     },
     {
         "title": "antonizabicki.pl",
