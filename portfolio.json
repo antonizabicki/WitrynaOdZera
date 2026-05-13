@@ -3,66 +3,77 @@
         "title": "foggy.dj",
         "subtitle": "Oficjalna strona artysty FoGGy. Unikalny styl, jeden z naszych najlepszych projektów!",
         "subtitle_en": "Official website of artist FoGGy. Unique style, one of our best projects!",
-        "image": "assets/zdj5.png"
+        "image": "assets/zdj5.png",
+        "url": "https://antonizabicki.github.io/foggy/"
     },
     {
         "title": "flajuss.com",
         "subtitle": "Oficjalna strona artysty flajuss.",
         "subtitle_en": "Official website of artist flajuss",
-        "image": "assets/witryna.png"
+        "image": "assets/witryna.png",
+        "url": "https://flajuss.com/"
     },
     {
         "title": "quei.lol",
         "subtitle": "Portfolio artysty z Poznania. Minimalistyczny design i spójna oprawa kolorystyczna",
         "subtitle_en": "Portfolio of a Poznań-based artist. Minimalist design and cohesive color scheme.",
-        "image": "assets/queiweb1.png"
+        "image": "assets/queiweb1.png",
+        "url": "https://quei.lol/"
     },
     {
         "title": "The Tribbe",
         "subtitle": "Projekt skupiający ambicje. Tajemniczość, symbolika totemu i dedykowane logo",
         "subtitle_en": "A project bringing ambitions together. Mystery, totem symbolism, and a dedicated logo.",
-        "image": "assets/stronac1.png"
+        "image": "assets/stronac1.png",
+        "url": "https://thetribbe.com/"
     },
     {
         "title": "wruszka.pl",
         "subtitle": "Symulator kasyna online, który pomaga oduczyć się reakcji na bodźce hazardowe",
         "subtitle_en": "Online casino simulator that helps unlearn reactions to gambling stimuli.",
-        "image": "assets/zdj4.png"
+        "image": "assets/zdj4.png",
+        "url": "https://wruszka.pl/"
     },
     {
         "title": "przekminka.pl",
         "subtitle": "Gra przeglądarkowa skupiona na zgadywaniu miejsc na świecie.",
         "subtitle_en": "Browser game focused on guessing places around the world.",
-        "image": "assets/przekminka.png"
+        "image": "assets/przekminka.png",
+        "url": "https://przekminka.pl/"
     },
     {
         "title": "antonizabicki.pl",
         "subtitle": "Portfolio Antoniego Żabickiego",
         "subtitle_en": "Antoni Żabicki's portfolio",
-        "image": "assets/zdj67.png"
+        "image": "assets/zdj67.png",
+        "url": "https://antonizabicki.pl/"
     },
     {
         "title": "what-is-next™",
         "subtitle": "Kreatywna marka i wytwórnia muzyczna. Dynamiczność, liquid glass i interaktywność",
         "subtitle_en": "Creative brand and music label. Dynamism, liquid glass, and interactivity.",
-        "image": "assets/stronaa1.png"
+        "image": "assets/stronaa1.png",
+        "url": "https://what-is-next.vip/"
     },
     {
         "title": "ultrastage™",
         "subtitle": "Symulator oświetlenia festiwalowego",
         "subtitle_en": "Stage lightning simulator",
-        "image": "assets/ultrastage.png"
+        "image": "assets/ultrastage.png",
+        "url": "https://ultrastage.pl/"
     },
     {
         "title": "mustool",
         "subtitle": "Narzędzia wspomagające produkcje muzyczną",
         "subtitle_en": "Tools for music production",
-        "image": "assets/mustool.png"
+        "image": "assets/mustool.png",
+        "url": "https://mustool.pl/"
     },
     {
         "title": "vvaav.art",
         "subtitle": "Portfolio artysty Vvaav.",
         "subtitle_en": "Official website of artist Vvaav",
-        "image": "assets/vvaav-1.png"
+        "image": "assets/vvaav-1.png",
+        "url": "https://vvaav.art/"
     }
 ]
