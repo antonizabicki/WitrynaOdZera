@@ -35,6 +35,13 @@
         "url": "https://wruszka.pl/"
     },
     {
+        "title": "freqrent",
+        "subtitle": "Wypożyczalnia sprzętu audio.",
+        "subtitle_en": "Audio equipment rental.",
+        "image": "assets/freq.png",
+        "url": "https://freqrent.pl/"
+    },
+    {
         "title": "przekminka.pl",
         "subtitle": "Gra przeglądarkowa skupiona na zgadywaniu miejsc na świecie.",
         "subtitle_en": "Browser game focused on guessing places around the world.",
@@ -77,3 +84,6 @@
         "url": "https://vvaav.art/"
     }
 ]
+
+
+
